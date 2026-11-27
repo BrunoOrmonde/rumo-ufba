@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rumo à UFBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: folha de respostas de concurso — faixa de navegação fixa, colunas de estudo, bolhas A–E como linguagem visual. */
+:root{
+  --bg:#f3f5f8; --paper:#ffffff; --ink:#14213a; --muted:#5a6680; --line:#d9dee8; --soft:#e9edf4;
+  --accent:#1f4fd1; --accent-ink:#ffffff; --mark:#ffe169; --mark-ink:#3b3000;
+  --ok:#1a7f4b; --ok-bg:#e3f4ea; --bad:#b4232c; --bad-bg:#fbe5e6; --warn:#a15c00; --warn-bg:#fff1d6;
+  --c-port:#7a3fc2; --c-info:#0a7f8c; --c-ap:#c2410c; --c-esp:#1f4fd1; --c-red:#a2286b;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1422; --paper:#161e30; --ink:#e7ecf6; --muted:#9aa6bf; --line:#2a3550; --soft:#1d2740;
+  --accent:#7d9dff; --accent-ink:#0b1326; --mark:#f5d547; --mark-ink:#2a2200;
+  --ok:#56d08f; --ok-bg:#12321f; --bad:#ff7b84; --bad-bg:#3a161b; --warn:#ffbe5c; --warn-bg:#3a2a10;
+  --c-port:#b48cff; --c-info:#4fd0dc; --c-ap:#ff9a5c; --c-esp:#7d9dff; --c-red:#f07ab8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1422; --paper:#161e30; --ink:#e7ecf6; --muted:#9aa6bf; --line:#2a3550; --soft:#1d2740;
+  --accent:#7d9dff; --accent-ink:#0b1326; --mark:#f5d547; --mark-ink:#2a2200;
+  --ok:#56d08f; --ok-bg:#12321f; --bad:#ff7b84; --bad-bg:#3a161b; --warn:#ffbe5c; --warn-bg:#3a2a10;
+  --c-port:#b48cff; --c-info:#4fd0dc; --c-ap:#ff9a5c; --c-esp:#7d9dff; --c-red:#f07ab8; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* topo */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+.top .row{display:flex;align-items:center;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto;min-width:0}
+.brand h1{font-size:1.25rem;font-weight:800;letter-spacing:-.01em}
+.brand small{color:var(--muted);font-size:.85rem}
+.brand h1{white-space:nowrap}
+@media (max-width:520px){.brand small{display:none}}
+.count{font-family:var(--f-mono);font-size:.85rem;background:var(--mark);color:var(--mark-ink);padding:3px 9px;border-radius:999px;font-weight:600;white-space:nowrap}
+.sync{font-size:.78rem;color:var(--muted);white-space:nowrap}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{border:0;background:transparent;padding:7px 12px;border-radius:999px;color:var(--muted);font-weight:600;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+nav.tabs button:hover:not([aria-selected="true"]){background:var(--soft);color:var(--ink)}
+main{padding-block:20px 60px}
+section[hidden]{display:none}
+
+/* blocos */
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.eyebrow{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.btn{border:1px solid var(--line);background:var(--paper);padding:8px 14px;border-radius:8px;font-weight:600}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--accent);padding-inline:6px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--ink);white-space:nowrap}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--c, var(--accent));display:inline-block}
+.mono{font-family:var(--f-mono)}
+.hl{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:3px}
+
+/* hoje */
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px}
+@media (max-width:760px){.hero{grid-template-columns:1fr}}
+.dayhead{display:flex;align-items:flex-start;gap:14px}
+.datebox{font-family:var(--f-mono);border:2px solid var(--ink);border-radius:8px;text-align:center;min-width:64px;padding:4px 6px;line-height:1.1}
+.datebox b{display:block;font-size:1.6rem}
+.datebox span{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
+.dayhead h2{font-size:1.45rem}
+.tasks{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.task{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:start;padding:9px 6px;border-radius:8px}
+.task:hover{background:var(--soft)}
+.task input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ok)}
+.task.done .tt{text-decoration:line-through;color:var(--muted)}
+.task .tt{min-width:0}
+.task .min{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);white-space:nowrap;padding-top:2px}
+.task .go{font-size:.85rem}
+.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar>span{display:block;height:100%;background:var(--ok);border-radius:99px}
+.weights{display:flex;flex-direction:column;gap:10px}
+.wrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;font-size:.92rem}
+.wrow .bar{grid-column:1/-1;height:10px}
+.wrow .bar>span{background:var(--c)}
+.note{border-left:4px solid var(--mark);background:var(--soft);padding:10px 12px;border-radius:0 8px 8px 0;font-size:.93rem}
+
+/* cronograma */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cal .dow{font-size:.72rem;text-align:center;color:var(--muted);font-weight:700;text-transform:uppercase}
+.cell{min-height:92px;border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:6px;text-align:left;display:flex;flex-direction:column;gap:4px;min-width:0}
+.cell.empty{background:transparent;border-style:dashed;opacity:.5}
+.cell .n{font-family:var(--f-mono);font-size:.8rem;font-weight:600;display:flex;justify-content:space-between}
+.cell .f{font-size:.78rem;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.cell.today{border:2px solid var(--accent)}
+.cell.exam{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cell.sim .f{font-weight:700}
+.cell .pbar{margin-top:auto;height:4px;background:var(--soft);border-radius:4px;overflow:hidden}
+.cell .pbar span{display:block;height:100%;background:var(--ok)}
+@media (max-width:620px){.cal{grid-template-columns:1fr}.cal .dow,.cell.empty{display:none}.cell{min-height:0}}
+
+/* flashcards */
+.flash{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.card3d{perspective:1200px;min-height:260px}
+.card3d .inner{position:relative;width:100%;min-height:260px;transition:transform .45s;transform-style:preserve-3d}
+.card3d.flip .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;justify-content:center;gap:12px;box-shadow:0 6px 0 var(--soft)}
+.face.back{transform:rotateY(180deg);border-color:var(--accent)}
+.face .q{font-family:var(--f-display);font-size:1.35rem;font-weight:700;text-wrap:balance}
+.face .a{font-size:1.12rem}
+@media (prefers-reduced-motion:reduce){.card3d .inner{transition:none}}
+.rate{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rate button{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px 4px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
+.rate button small{font-weight:400;color:var(--muted);font-size:.75rem}
+.rate .r0{border-color:var(--bad);color:var(--bad)}
+.rate .r1{border-color:var(--warn);color:var(--warn)}
+.rate .r2{border-color:var(--ok);color:var(--ok)}
+.rate .r3{border-color:var(--accent);color:var(--accent)}
+.boxes{display:flex;gap:6px;align-items:flex-end;height:70px}
+.boxes div{flex:1;background:var(--accent);border-radius:4px 4px 0 0;min-height:2px;opacity:.85}
+.boxlbl{display:flex;gap:6px}.boxlbl span{flex:1;text-align:center;font-size:.7rem;color:var(--muted)}
+
+/* simulado */
+.simgrid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;align-items:start}
+@media (max-width:820px){.simgrid{grid-template-columns:1fr}}
+.qtext{font-size:1.08rem}
+.alts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.alt{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;align-items:start;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px 12px}
+.alt:hover{border-color:var(--ink)}
+.bub{width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--f-mono);font-weight:600;font-size:.9rem}
+.alt.sel .bub{background:var(--ink);color:var(--paper)}
+.alt.right{border-color:var(--ok);background:var(--ok-bg)}
+.alt.right .bub{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.alt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.alt.wrong .bub{background:var(--bad);border-color:var(--bad);color:var(--paper)}
+.expl{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--soft);font-size:.95rem}
+.sheet{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.sheet button{border:1px solid var(--line);background:var(--paper);border-radius:6px;font-family:var(--f-mono);font-size:.78rem;padding:5px 0}
+.sheet button.ans{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.sheet button.cur{outline:2px solid var(--accent);outline-offset:1px}
+.sheet button.okq{background:var(--ok);color:var(--paper);border-color:var(--ok)}
+.sheet button.errq{background:var(--bad);color:var(--paper);border-color:var(--bad)}
+.timer{font-family:var(--f-mono);font-size:1.6rem;font-weight:600}
+.opt{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:var(--paper);display:flex;flex-direction:column;gap:8px;text-align:left}
+.opt h3{font-size:1.1rem}
+.opt.reco{border:2px solid var(--accent)}
+.res-big{font-family:var(--f-display);font-size:2.6rem;font-weight:800;line-height:1}
+table.t{width:100%;border-collapse:collapse;font-size:.93rem}
+table.t th,table.t td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left}
+table.t td.n,table.t th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tscroll{overflow-x:auto}
+
+/* resumos */
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 12px;font-weight:600;font-size:.88rem}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+details.topic{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);border-left:5px solid var(--c)}
+details.topic>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:10px;align-items:center}
+details.topic>summary::-webkit-details-marker{display:none}
+details.topic>summary h3{font-size:1.05rem;flex:1;min-width:0}
+details.topic .body{padding:0 16px 16px;display:flex;flex-direction:column;gap:14px}
+details.topic ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.mnem{background:var(--mark);color:var(--mark-ink);border-radius:10px;padding:12px 14px}
+.mnem b{font-family:var(--f-display);font-size:1.15rem;display:block}
+.cloze{display:flex;flex-direction:column;gap:8px}
+.cloze p{margin:0;padding:10px 12px;background:var(--soft);border-radius:8px}
+.blank{border:0;border-bottom:2px dashed var(--accent);background:transparent;color:transparent;padding:0 4px;min-width:60px;border-radius:0}
+.blank.show{color:var(--accent);font-weight:700;border-bottom-style:solid}
+.done-badge{color:var(--ok);font-weight:700;font-size:.82rem}
+
+/* redação */
+.crit{display:grid;grid-template-columns:minmax(0,1fr) 60px;gap:6px 12px;align-items:center}
+.crit .pts{font-family:var(--f-mono);font-weight:600;text-align:right}
+textarea.redac{width:100%;min-height:380px;border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--paper);
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--line) 31px,var(--line) 32px);line-height:32px;resize:vertical}
+.lines{font-family:var(--f-mono);font-weight:600}
+.lines.bad{color:var(--bad)} .lines.ok{color:var(--ok)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:999px;font-weight:600;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+textarea.code{width:100%;min-height:90px;font-family:var(--f-mono);font-size:.78rem;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--soft)}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <div class="row">
+      <div class="brand"><h1>Rumo à UFBA</h1><small>Assistente em Administração · Pedro</small></div>
+      <span class="sync" id="sync">Carregando…</span>
+      <span class="count" id="countdown">—</span>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Seções">
+      <button role="tab" data-tab="hoje" aria-selected="true">Hoje</button>
+      <button role="tab" data-tab="cronograma">Cronograma</button>
+      <button role="tab" data-tab="flashcards">Flashcards</button>
+      <button role="tab" data-tab="simulados">Questões e simulados</button>
+      <button role="tab" data-tab="resumos">Resumos e mnemônicos</button>
+      <button role="tab" data-tab="redacao">Redação</button>
+      <button role="tab" data-tab="desempenho">Desempenho</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="tab-hoje"><div class="empty">Carregando o plano de estudos…</div></section>
+  <section id="tab-cronograma" hidden></section>
+  <section id="tab-flashcards" hidden></section>
+  <section id="tab-simulados" hidden></section>
+  <section id="tab-resumos" hidden></section>
+  <section id="tab-redacao" hidden></section>
+  <section id="tab-desempenho" hidden></section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const EXAM = "2026-12-20", START = "2026-11-30", LAST = "2026-12-19";
+const COR = {port:"var(--c-port)", info:"var(--c-info)", ap:"var(--c-ap)", esp:"var(--c-esp)", red:"var(--c-red)"};
+const SIGLA = {port:"Português", info:"Informática", ap:"Adm. Pública", esp:"Específicos"};
+const DOW = ["dom","seg","ter","qua","qui","sex","sáb"];
+const MES = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const INTERVAL = [0,1,2,4,7,12];
+const LS_KEY = "rumo-ufba-pedro-v1";
+let D = null;               // conteúdo
+let S = null;               // estado/progresso
+let T = {};                 // índices
+let db = null, docRef = null, saveTimer = null, saving = false, pendingSave = false;
+
+// ---------- utilidades ----------
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad = n => String(n).padStart(2,"0");
+function todayISO(){ const d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function parseISO(s){ const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); }
+function addDays(s,n){ const d=parseISO(s); d.setDate(d.getDate()+n); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function diffDays(a,b){ return Math.round((parseISO(b)-parseISO(a))/86400000); }
+function fmtDate(s,long){ const d=parseISO(s); return long ? DOW[d.getDay()]+", "+d.getDate()+" de "+MES[d.getMonth()] : pad(d.getDate())+"/"+pad(d.getMonth()+1); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),2200); }
+function matOf(tp){ return T.top[tp] ? T.top[tp].m : "esp"; }
+function chip(m,label){ return '<span class="chip" style="--c:'+COR[m]+'"><i></i>'+esc(label||SIGLA[m]||m)+'</span>'; }
+const LETRAS = ["A","B","C","D","E"];
+
+// ---------- estado ----------
+function blankState(){ return {v:1, updatedAt:0, tasks:{}, cards:{}, qstats:{}, sims:[], lido:{}, redacoes:[], liberarTudo:false}; }
+function loadLocal(){ try{ const r=localStorage.getItem(LS_KEY); if(r) return JSON.parse(r); }catch(e){} return null; }
+function saveLocal(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+function setSync(txt){ $("#sync").textContent = txt; }
+function touch(){
+  S.updatedAt = Date.now(); saveLocal();
+  clearTimeout(saveTimer); saveTimer = setTimeout(pushRemote, 1500);
+}
+async function pushRemote(){
+  if(!docRef){ setSync("Salvo neste navegador"); return; }
+  if(saving){ pendingSave = true; return; }
+  saving = true; setSync("Salvando…");
+  try{ await docRef.set({estado: JSON.stringify(S), updatedAt: S.updatedAt}); setSync("Progresso salvo na nuvem"); }
+  catch(e){ setSync("Salvo neste navegador"); }
+  saving = false;
+  if(pendingSave){ pendingSave=false; pushRemote(); }
+}
+async function connectRemote(){ setSync("Salvo neste navegador"); }
+
+// ---------- calendário / desbloqueio ----------
+function curDay(){ const t=todayISO(); if(t<START) return START; if(t>LAST) return LAST; return t; }
+function dayOfTopic(tp){ return T.topDay[tp] || START; }
+function topicUnlocked(tp){ return S.liberarTudo || S.lido[tp] || dayOfTopic(tp) <= todayISO(); }
+function unlockedTopics(){ return D.topicos.filter(t=>topicUnlocked(t.id)).map(t=>t.id); }
+function simOfDay(d){ return {"2026-12-05":{n:30,min:105,nome:"Simulado 1"},"2026-12-12":{n:40,min:140,nome:"Simulado 2"},"2026-12-17":{n:60,min:240,nome:"Simulado 3 (prova completa)",full:true}}[d]; }
+
+function dayTasks(day){
+  const tasks=[];
+  day.tps.forEach(tp=>{
+    const t=T.top[tp];
+    tasks.push({id:"r:"+tp, txt:"Estudar o resumo e completar as lacunas: "+t.t, m:t.m, min:40, go:{tab:"resumos",tp}});
+  });
+  if(day.tps.length){
+    tasks.push({id:"c:"+day.d, txt:"Flashcards: revisar os pendentes e aprender os novos de hoje", m:null, min:20, go:{tab:"flashcards"}});
+    tasks.push({id:"q:"+day.d, txt:"Treino rápido: 10 questões dos tópicos de hoje", m:null, min:25, go:{tab:"simulados",treinoDia:day.d}});
+  }
+  const sim=simOfDay(day.d);
+  day.extra.forEach((x,i)=>{
+    const t={id:"x"+i+":"+day.d, txt:x, m:null, min:null};
+    if(/^Simulado/.test(x) && sim) { t.go={tab:"simulados",simDia:day.d}; t.min=sim.min; }
+    else if(/Diagnóstico/.test(x)) { t.go={tab:"simulados",diag:true}; t.min=20; }
+    else if(/^Redação/.test(x)) { t.go={tab:"redacao"}; t.min=60; }
+    else if(/^Treino/.test(x)) { t.go={tab:"simulados"}; t.min=20; }
+    else if(/Caderno de erros|Refaça/.test(x)) { t.go={tab:"simulados",erros:true}; }
+    else if(/flashcards/i.test(x)) { t.go={tab:"flashcards"}; }
+    else if(/mnemônicos/.test(x)) { t.go={tab:"resumos",mnem:true}; }
+    tasks.push(t);
+  });
+  return tasks;
+}
+function dayProgress(day){ const ts=dayTasks(day); if(!ts.length) return 0; const done=ts.filter(t=>S.tasks[t.id]).length; return done/ts.length; }
+
+// ---------- flashcards (repetição espaçada) ----------
+function cardState(id){ return S.cards[id]; }
+function dueCards(){
+  const t=todayISO(), un=new Set(unlockedTopics());
+  const due=[], novos=[];
+  D.cards.forEach(c=>{
+    if(!un.has(c.tp)) return;
+    const st=cardState(c.id);
+    if(!st) novos.push(c); else if(st.due<=t) due.push(c);
+  });
+  return {due, novos};
+}
+function rateCard(c, r){
+  const t=todayISO(); const st=S.cards[c.id] || {box:0, reps:0, lapses:0};
+  st.reps++;
+  if(r===0){ st.box=0; st.lapses++; st.due=t; }
+  else {
+    if(r===1) st.box=Math.max(1, st.box);
+    if(r===2) st.box=Math.min(5, st.box+1);
+    if(r===3) st.box=Math.min(5, st.box+2);
+    let due = addDays(t, INTERVAL[st.box]);
+    if(due>LAST && t<LAST) due = LAST;      // tudo volta antes da prova
+    st.due = due;
+  }
+  st.last=t; S.cards[c.id]=st; touch();
+}
+
+// ---------- render: HOJE ----------
+let viewDay = null;
+function renderHoje(){
+  const el=$("#tab-hoje"); const t=todayISO();
+  if(!viewDay) viewDay = curDay();
+  const idx=D.crono.findIndex(d=>d.d===viewDay); const day=D.crono[idx];
+  const tasks=dayTasks(day); const done=tasks.filter(x=>S.tasks[x.id]).length;
+  const totalMin=tasks.reduce((a,x)=>a+(x.min||0),0);
+  const dc=dueCards();
+  let pre="";
+  if(t<START) pre='<div class="note">O plano começa na segunda, 30/11. Faltam '+diffDays(t,START)+' dia(s). Dá para adiantar: veja o dia 1 abaixo ou faça o Diagnóstico.</div>';
+  if(t>LAST && t<=EXAM) pre='<div class="note"><b>Dia da prova.</b> Prova objetiva + redação no período da manhã, 4 horas no total. Leve documento com foto e caneta esferográfica transparente azul ou preta. Boa prova, Pedro!</div>';
+  const dd=parseISO(viewDay);
+  el.innerHTML = pre + '<div class="hero" style="margin-top:'+(pre?"14px":"0")+'">'+
+   '<div class="panel">'+
+     '<div class="dayhead"><div class="datebox"><b>'+dd.getDate()+'</b><span>'+MES[dd.getMonth()]+' · '+DOW[dd.getDay()]+'</span></div>'+
+     '<div style="flex:1;min-width:0"><div class="eyebrow">Dia '+(idx+1)+' de '+D.crono.length+(viewDay===t?' · hoje':'')+'</div><h2>'+esc(day.foco)+'</h2>'+
+     '<div class="row small muted" style="margin-top:6px">'+done+' de '+tasks.length+' tarefas · cerca de '+Math.round(totalMin/60*10)/10+' h de estudo</div></div></div>'+
+     '<div class="bar" style="margin-top:12px"><span style="width:'+(tasks.length?done/tasks.length*100:0)+'%"></span></div>'+
+     '<ul class="tasks">'+tasks.map(x=>
+       '<li class="task'+(S.tasks[x.id]?' done':'')+'"><input type="checkbox" id="tk-'+esc(x.id)+'" data-task="'+esc(x.id)+'" '+(S.tasks[x.id]?'checked':'')+' aria-label="Concluir tarefa">'+
+       '<label class="tt" for="tk-'+esc(x.id)+'">'+(x.m?chip(x.m)+' ':'')+esc(x.txt)+(x.go?' <button class="btn ghost go" data-go="'+esc(JSON.stringify(x.go))+'">Abrir</button>':'')+'</label>'+
+       '<span class="min">'+(x.min?x.min+' min':'')+'</span></li>').join("")+'</ul>'+
+     '<div class="row" style="margin-top:12px;justify-content:space-between">'+
+       '<button class="btn" id="prevDay" '+(idx===0?'disabled':'')+'>← Dia anterior</button>'+
+       (viewDay!==curDay()?'<button class="btn ghost" id="backToday">Voltar para hoje</button>':'')+
+       '<button class="btn" id="nextDay" '+(idx===D.crono.length-1?'disabled':'')+'>Próximo dia →</button></div>'+
+   '</div>'+
+   '<div class="stack">'+
+     '<div class="panel"><div class="eyebrow">Flashcards agora</div>'+
+       '<div class="row" style="margin-top:6px;align-items:baseline"><span class="res-big">'+dc.due.length+'</span><span class="muted">para revisar</span><span class="res-big" style="font-size:1.6rem;margin-left:12px">'+dc.novos.length+'</span><span class="muted">novos liberados</span></div>'+
+       '<button class="btn primary" style="margin-top:10px" data-go=\'{"tab":"flashcards"}\'>Revisar flashcards</button></div>'+
+     '<div class="panel"><div class="eyebrow">Onde estão os pontos da objetiva</div><div class="weights" style="margin-top:10px">'+
+       D.materias.map(m=>'<div class="wrow" style="--c:'+COR[m.id]+'"><span>'+esc(m.nome)+'</span><span class="mono small">'+m.q+' q × '+m.peso+' = <b>'+m.pts+' pts</b></span><div class="bar"><span style="width:'+(m.pts/60*100)+'%"></span></div></div>').join("")+
+     '</div><p class="small muted" style="margin:10px 0 0">Objetiva vale 90 pontos (60 questões, 5 alternativas). Mínimo de 45 pontos e nenhuma área zerada. Redação vale 60, mínimo 30. Específicos sozinhos valem 2/3 da objetiva.</p></div>'+
+   '</div></div>';
+}
+
+// ---------- render: CRONOGRAMA ----------
+function renderCrono(){
+  const el=$("#tab-cronograma"); const t=todayISO();
+  const first=parseISO(START); const lead=(first.getDay()+6)%7; // segunda = 0
+  let cells=["seg","ter","qua","qui","sex","sáb","dom"].map(d=>'<div class="dow">'+d+'</div>').join("");
+  for(let i=0;i<lead;i++) cells+='<div class="cell empty"></div>';
+  D.crono.forEach(day=>{
+    const p=dayProgress(day); const sim=simOfDay(day.d);
+    cells+='<button class="cell'+(day.d===t?' today':'')+(sim||!day.tps.length?' sim':'')+'" data-day="'+day.d+'"><span class="n"><span>'+fmtDate(day.d)+'</span><span>'+(p===1?'✓':'')+'</span></span>'+
+      '<span class="f">'+esc(day.foco)+'</span><span class="row" style="gap:3px">'+[...new Set(day.tps.map(matOf))].map(m=>'<i style="width:8px;height:8px;border-radius:50%;background:'+COR[m]+';display:inline-block"></i>').join("")+'</span>'+
+      '<span class="pbar"><span style="width:'+p*100+'%"></span></span></button>';
+  });
+  cells+='<div class="cell exam"><span class="n"><span>20/12</span></span><span class="f"><b>PROVA</b><br>Objetiva + redação, manhã, 4h</span></div>';
+  const totalTasks=D.crono.reduce((a,d)=>a+dayTasks(d).length,0);
+  const doneTasks=D.crono.reduce((a,d)=>a+dayTasks(d).filter(x=>S.tasks[x.id]).length,0);
+  el.innerHTML='<div class="stack"><div class="row" style="justify-content:space-between"><div><h2>Cronograma de 30/11 a 19/12</h2><p class="muted small" style="margin:4px 0 0">20 dias. A ordem segue o peso de cada área no edital: Conhecimentos Específicos valem 60 dos 90 pontos da objetiva. Sábados são de simulado e redação; a véspera é leve.</p></div>'+
+   '<div class="chip">'+doneTasks+' / '+totalTasks+' tarefas</div></div>'+
+   '<div class="row small">'+["esp","ap","port","info"].map(m=>chip(m)).join("")+'</div>'+
+   '<div class="cal">'+cells+'</div>'+
+   '<div class="panel"><h3 style="font-size:1.05rem">Datas do edital (Anexo III)</h3><table class="t" style="margin-top:8px"><tbody>'+
+   [["11/12/2026","Divulgação do horário e local da prova (avalia.org.br)"],["20/12/2026","Aplicação da prova objetiva e de redação"],["21/12/2026","Gabarito preliminar e caderno de questões"],["22 e 23/12/2026","Recurso contra o gabarito preliminar"],["12/01/2027","Resultado preliminar da prova objetiva"]].map(r=>'<tr><td class="mono">'+r[0]+'</td><td>'+r[1]+'</td></tr>').join("")+
+   '</tbody></table></div></div>';
+}
+
+// ---------- render: FLASHCARDS ----------
+let fq=null, fcur=null, fflip=false, fdone=0;
+function buildFlashQueue(){
+  const {due,novos}=dueCards();
+  fq = shuffle(due).concat(novos.slice(0,25)); fdone=0;
+}
+function renderFlash(){
+  const el=$("#tab-flashcards");
+  if(!fq) buildFlashQueue();
+  const boxes=[0,0,0,0,0,0]; let vistos=0;
+  D.cards.forEach(c=>{const s=S.cards[c.id]; if(s){boxes[s.box]++; vistos++;}});
+  const maxb=Math.max(1,...boxes);
+  const side='<div class="panel"><div class="eyebrow">Caixas de repetição</div><div class="boxes" style="margin-top:10px">'+boxes.map(b=>'<div style="height:'+(b/maxb*100)+'%" title="'+b+' cartões"></div>').join("")+'</div>'+
+    '<div class="boxlbl">'+boxes.map((b,i)=>'<span>'+(i===0?'nova':i)+'<br><b class="mono">'+b+'</b></span>').join("")+'</div>'+
+    '<p class="small muted" style="margin:10px 0 0">'+vistos+' de '+D.cards.length+' cartões já vistos. Quanto mais alto a caixa, mais espaçada a revisão (1, 2, 4, 7 e 12 dias). Todos voltam antes de 19/12.</p>'+
+    '<label class="row small" style="margin-top:8px"><input type="checkbox" id="libAll" '+(S.liberarTudo?'checked':'')+'> Liberar todos os tópicos (adiantar conteúdo)</label></div>';
+  if(!fq.length){
+    el.innerHTML='<div class="flash"><div class="panel empty"><h2 style="color:var(--ink)">Tudo em dia</h2><p>Nenhum cartão pendente agora. Os próximos são liberados conforme o cronograma avança, ou marque “Liberar todos os tópicos”.</p></div>'+side+'</div>';
+    return;
+  }
+  fcur=fq[0]; const tp=T.top[fcur.tp]; const st=S.cards[fcur.id];
+  const nx=b=>INTERVAL[Math.min(5,b)];
+  const b0=st?st.box:0;
+  el.innerHTML='<div class="flash">'+
+   '<div class="row" style="justify-content:space-between"><span class="small muted">'+fq.length+' na fila · '+fdone+' feitos nesta sessão</span>'+chip(tp.m, tp.t.length>38?SIGLA[tp.m]:tp.t)+'</div>'+
+   '<div class="card3d'+(fflip?' flip':'')+'" id="fcard"><div class="inner">'+
+     '<div class="face front"><div class="eyebrow">'+(st?'Revisão · caixa '+st.box:'Cartão novo')+'</div><div class="q">'+esc(fcur.f)+'</div><div class="small muted">Toque no cartão ou aperte Espaço para virar</div></div>'+
+     '<div class="face back"><div class="eyebrow">Resposta</div><div class="a">'+esc(fcur.v)+'</div><div class="small muted">'+esc(tp.t)+'</div></div>'+
+   '</div></div>'+
+   '<div class="rate" '+(fflip?'':'hidden')+' id="rate">'+
+     '<button class="r0" data-rate="0">Errei<small>de novo hoje</small></button>'+
+     '<button class="r1" data-rate="1">Difícil<small>'+nx(Math.max(1,b0))+' dia(s)</small></button>'+
+     '<button class="r2" data-rate="2">Bom<small>'+nx(b0+1)+' dias</small></button>'+
+     '<button class="r3" data-rate="3">Fácil<small>'+nx(b0+2)+' dias</small></button></div>'+
+   (fflip?'':'<button class="btn primary" id="flipBtn">Mostrar resposta</button>')+
+   side+'</div>';
+}
+
+// ---------- render: SIMULADOS ----------
+let SIM=null; // {nome, qs:[ids], ans:{}, idx, mode:'prova'|'treino', start, limitMin, done, full}
+function pickQuestions(n, tps, opts={}){
+  const allow=new Set(tps);
+  let pool=D.questoes.filter(q=>allow.has(q.tp));
+  if(pool.length<n) pool=D.questoes.slice();
+  const unseen=q=>!S.qstats[q.id];
+  if(opts.prop){
+    const quota={esp:30,ap:12,port:12,info:6}; const tot=60; const out=[];
+    Object.keys(quota).forEach(m=>{
+      const k=Math.round(quota[m]*n/tot);
+      const pm=pool.filter(q=>matOf(q.tp)===m);
+      const ord=shuffle(pm.filter(unseen)).concat(shuffle(pm.filter(q=>!unseen(q))));
+      out.push(...ord.slice(0,k));
+    });
+    if(out.length<n){ const rest=shuffle(pool.filter(q=>!out.includes(q))); out.push(...rest.slice(0,n-out.length)); }
+    const order=["port","info","ap","esp"];
+    return out.slice(0,n).sort((a,b)=>order.indexOf(matOf(a.tp))-order.indexOf(matOf(b.tp))).map(q=>q.id);
+  }
+  return shuffle(pool.filter(unseen)).concat(shuffle(pool.filter(q=>!unseen(q)))).slice(0,n).map(q=>q.id);
+}
+function startSim(cfg){
+  SIM=Object.assign({ans:{}, idx:0, start:Date.now(), done:false, revealed:{}}, cfg);
+  renderSim(); window.scrollTo(0,0);
+}
+function errosList(){ return Object.keys(S.qstats).filter(id=>S.qstats[id].last===false && T.q[id]); }
+function renderSimHome(){
+  const el=$("#tab-simulados"); const un=unlockedTopics(); const cd=curDay();
+  const sims=["2026-12-05","2026-12-12","2026-12-17"];
+  const nErr=errosList().length;
+  el.innerHTML='<div class="stack"><div><h2>Questões e simulados</h2><p class="muted small" style="margin:4px 0 0">'+D.questoes.length+' questões no estilo da banca (Instituto Avalia): 5 alternativas, uma correta, com explicação. Os simulados seguem a proporção do edital (12 Português, 6 Informática, 12 Adm. Pública e 30 Específicos com peso 2).</p></div>'+
+   '<div class="grid g2">'+
+   sims.map(d=>{const s=simOfDay(d); const reco=d===cd||(cd>d&&!S.sims.some(x=>x.nome===s.nome)&&d===sims.find(x=>x>=cd)); return '<button class="opt'+(d===cd?' reco':'')+'" data-sim="'+d+'"><span class="eyebrow">'+fmtDate(d,true)+(d===cd?' · hoje':'')+'</span><h3>'+s.nome+'</h3><span class="small muted">'+s.n+' questões, '+Math.floor(s.min/60)+'h'+pad(s.min%60)+'. Gabarito só no fim, como na prova.'+(s.full?' Inclua a redação no tempo.':'')+'</span></button>';}).join("")+
+   '<button class="opt" data-diag="1"><span class="eyebrow">Ponto de partida</span><h3>Diagnóstico</h3><span class="small muted">10 questões de todas as áreas, com correção a cada questão.</span></button>'+
+   '</div>'+
+   '<div class="panel stack"><h3 style="font-size:1.1rem">Treino rápido</h3><p class="small muted" style="margin:0">Correção imediata após cada resposta.</p>'+
+   '<div class="row"><label for="trMat" class="small">Área</label><select id="trMat" class="btn"><option value="all">Todas as liberadas</option>'+D.materias.map(m=>'<option value="'+m.id+'">'+esc(m.nome)+'</option>').join("")+'</select>'+
+   '<label for="trTp" class="small">Tópico</label><select id="trTp" class="btn" style="max-width:100%"><option value="all">Todos</option>'+D.topicos.map(t=>'<option value="'+t.id+'">'+esc(SIGLA[t.m]+" · "+t.t)+'</option>').join("")+'</select>'+
+   '<label for="trN" class="small">Qtde</label><select id="trN" class="btn"><option>5</option><option selected>10</option><option>20</option></select>'+
+   '<button class="btn primary" id="trGo">Começar treino</button></div>'+
+   '<p class="small muted" style="margin:0">'+un.length+' de '+D.topicos.length+' tópicos liberados pelo cronograma.</p></div>'+
+   '<div class="panel row" style="justify-content:space-between"><div><h3 style="font-size:1.1rem">Caderno de erros</h3><p class="small muted" style="margin:2px 0 0">Questões cuja última resposta foi errada: <b>'+nErr+'</b>. Acertou na revisão, ela sai do caderno.</p></div><button class="btn" id="errGo" '+(nErr?'':'disabled')+'>Refazer erros</button></div>'+
+   (S.sims.length?'<div class="panel"><h3 style="font-size:1.1rem">Histórico</h3><div class="tscroll"><table class="t" style="margin-top:8px"><thead><tr><th>Data</th><th>Simulado</th><th class="n">Acertos</th><th class="n">Pontos</th></tr></thead><tbody>'+
+     S.sims.slice().reverse().slice(0,12).map(s=>'<tr><td class="mono">'+fmtDate(s.date)+'</td><td>'+esc(s.nome)+'</td><td class="n">'+s.ok+'/'+s.n+'</td><td class="n">'+s.pts+' / '+s.max+'</td></tr>').join("")+'</tbody></table></div></div>':'')+
+   '</div>';
+}
+function simScore(ids, ans){
+  const by={}; let ok=0, pts=0, max=0;
+  ids.forEach(id=>{const q=T.q[id]; const m=matOf(q.tp); const w=m==="esp"?2:1; by[m]=by[m]||{ok:0,n:0}; by[m].n++; max+=w; if(ans[id]===q.c){ok++;pts+=w;by[m].ok++;}});
+  return {ok, pts, max, by};
+}
+function recordAnswer(id, a){
+  const q=T.q[id]; const st=S.qstats[id]||{ok:0,err:0}; if(a===q.c) st.ok++; else st.err++; st.last=(a===q.c); S.qstats[id]=st;
+}
+function finishSim(){
+  SIM.done=true; SIM.end=Date.now();
+  if(SIM.mode==="prova") SIM.qs.forEach(id=>{ if(SIM.ans[id]!==undefined) recordAnswer(id, SIM.ans[id]); });
+  const sc=simScore(SIM.qs, SIM.ans);
+  S.sims.push({date:todayISO(), nome:SIM.nome, n:SIM.qs.length, ok:sc.ok, pts:sc.pts, max:sc.max, by:sc.by});
+  if(SIM.taskId) S.tasks[SIM.taskId]=true;
+  touch(); renderSim(); window.scrollTo(0,0);
+}
+let simTick=null;
+function renderSim(){
+  const el=$("#tab-simulados"); clearInterval(simTick);
+  if(!SIM){ renderSimHome(); return; }
+  if(SIM.done){ renderSimResult(); return; }
+  const id=SIM.qs[SIM.idx]; const q=T.q[id]; const tp=T.top[q.tp]; const a=SIM.ans[id];
+  const treino=SIM.mode==="treino"; const rev=treino && SIM.revealed[id];
+  el.innerHTML='<div class="simgrid"><div class="panel">'+
+    '<div class="row" style="justify-content:space-between"><span class="eyebrow">'+esc(SIM.nome)+' · Questão '+(SIM.idx+1)+' de '+SIM.qs.length+'</span>'+chip(tp.m)+'</div>'+
+    '<p class="qtext" style="margin:12px 0 0">'+esc(q.e)+'</p>'+
+    '<div class="alts">'+q.a.map((t,i)=>{let c="alt"; if(a===i) c+=" sel"; if(rev){ if(i===q.c) c+=" right"; else if(a===i) c+=" wrong"; } return '<button class="'+c+'" data-alt="'+i+'" '+(rev?'disabled':'')+'><span class="bub">'+LETRAS[i]+'</span><span>'+esc(t)+'</span></button>';}).join("")+'</div>'+
+    (rev?'<div class="expl"><b>'+(a===q.c?'Correta!':'Gabarito: '+LETRAS[q.c])+'</b> '+esc(q.x)+'<div class="small muted" style="margin-top:6px">Tópico: '+esc(tp.t)+' <button class="btn ghost" data-go=\'{"tab":"resumos","tp":"'+q.tp+'"}\'>ver resumo</button></div></div>':'')+
+    '<div class="row" style="margin-top:14px;justify-content:space-between"><button class="btn" id="qPrev" '+(SIM.idx===0?'disabled':'')+'>← Anterior</button>'+
+    (treino&&!rev?'<button class="btn primary" id="qCheck" '+(a===undefined?'disabled':'')+'>Corrigir</button>':'')+
+    (SIM.idx<SIM.qs.length-1?'<button class="btn '+(treino&&!rev?'':'primary')+'" id="qNext">Próxima →</button>':'<button class="btn primary" id="qEnd">Finalizar</button>')+'</div></div>'+
+    '<div class="panel stack">'+(SIM.limitMin?'<div><div class="eyebrow">Tempo restante</div><div class="timer" id="timer">—</div></div>':'')+
+    '<div><div class="eyebrow" style="margin-bottom:6px">Folha de respostas</div><div class="sheet">'+SIM.qs.map((qid,i)=>{let c=""; if(SIM.ans[qid]!==undefined) c="ans"; if(treino&&SIM.revealed[qid]) c=(SIM.ans[qid]===T.q[qid].c?"okq":"errq"); return '<button class="'+c+(i===SIM.idx?' cur':'')+'" data-jump="'+i+'">'+(i+1)+(SIM.ans[qid]!==undefined&&!treino?LETRAS[SIM.ans[qid]]:'')+'</button>';}).join("")+'</div></div>'+
+    '<div class="small muted">'+Object.keys(SIM.ans).length+' de '+SIM.qs.length+' respondidas</div>'+
+    '<div class="row"><button class="btn" id="qQuit">Sair sem salvar</button>'+(treino?'':'<button class="btn primary" id="qEnd2">Entregar prova</button>')+'</div></div></div>';
+  if(SIM.limitMin){
+    const upd=()=>{ const left=SIM.limitMin*60000-(Date.now()-SIM.start); const tEl=$("#timer"); if(!tEl) return;
+      if(left<=0){ clearInterval(simTick); tEl.textContent="00:00"; toast("Tempo esgotado"); finishSim(); return; }
+      const m=Math.floor(left/60000), s=Math.floor(left%60000/1000); tEl.textContent=(m>=60?Math.floor(m/60)+":"+pad(m%60):pad(m))+":"+pad(s); };
+    upd(); simTick=setInterval(upd,1000);
+  }
+}
+function renderSimResult(){
+  const el=$("#tab-simulados"); const sc=simScore(SIM.qs, SIM.ans);
+  const mins=Math.round((SIM.end-SIM.start)/60000);
+  const full=SIM.full; const zero=Object.keys(sc.by).filter(m=>sc.by[m].ok===0);
+  const aprov=sc.pts>=sc.max/2 && !zero.length;
+  el.innerHTML='<div class="stack"><div class="panel"><div class="eyebrow">'+esc(SIM.nome)+' · resultado</div>'+
+   '<div class="row" style="margin-top:8px;align-items:baseline;gap:18px"><span class="res-big">'+sc.pts+'<span style="font-size:1.2rem;color:var(--muted)"> / '+sc.max+' pts</span></span><span class="muted">'+sc.ok+' acertos em '+SIM.qs.length+' · '+mins+' min</span></div>'+
+   '<div class="note" style="margin-top:12px;border-left-color:'+(aprov?'var(--ok)':'var(--bad)')+'">'+(aprov?'Acima do mínimo de 50% dos pontos e sem área zerada. Se fosse a prova, a redação seria corrigida (desde que dentro do limite de classificação).':'Abaixo do mínimo: o edital exige 50% dos pontos da objetiva e nenhuma área zerada'+(zero.length?' (zerou: '+zero.map(m=>SIGLA[m]).join(", ")+')':'')+'. Revise os erros abaixo.')+'</div>'+
+   '<div class="tscroll"><table class="t" style="margin-top:12px"><thead><tr><th>Área</th><th class="n">Acertos</th><th class="n">%</th><th class="n">Pontos</th></tr></thead><tbody>'+
+   Object.keys(sc.by).map(m=>{const b=sc.by[m]; const w=m==="esp"?2:1; return '<tr><td>'+chip(m)+'</td><td class="n">'+b.ok+'/'+b.n+'</td><td class="n">'+Math.round(b.ok/b.n*100)+'%</td><td class="n">'+b.ok*w+'</td></tr>';}).join("")+'</tbody></table></div>'+
+   '<div class="row" style="margin-top:12px"><button class="btn primary" id="simBack">Voltar aos simulados</button></div></div>'+
+   '<h3>Correção comentada</h3>'+
+   SIM.qs.map((id,i)=>{const q=T.q[id]; const a=SIM.ans[id]; const ok=a===q.c; return '<div class="panel"><div class="row" style="justify-content:space-between"><span class="eyebrow">Questão '+(i+1)+' · '+(a===undefined?'em branco':ok?'acertou':'errou')+'</span>'+chip(matOf(q.tp))+'</div><p style="margin:8px 0">'+esc(q.e)+'</p>'+
+     '<div class="alts">'+q.a.map((t,j)=>'<div class="alt'+(j===q.c?' right':(j===a?' wrong':''))+'"><span class="bub">'+LETRAS[j]+'</span><span>'+esc(t)+'</span></div>').join("")+'</div><div class="expl">'+esc(q.x)+'</div></div>';}).join("")+'</div>';
+}
+
+// ---------- render: RESUMOS ----------
+let resFilter="all", onlyMnem=false, openTp=null;
+function renderResumos(){
+  const el=$("#tab-resumos");
+  const list=D.topicos.filter(t=>resFilter==="all"||t.m===resFilter).sort((a,b)=>dayOfTopic(a.id)<dayOfTopic(b.id)?-1:1);
+  el.innerHTML='<div class="stack"><div><h2>Resumos e mnemônicos</h2><p class="muted small" style="margin:4px 0 0">Baseados no Anexo II do edital (conteúdo do cargo 201). Leia o resumo, decore o mnemônico e complete as lacunas tocando nos espaços.</p></div>'+
+   '<div class="row" style="justify-content:space-between"><div class="filters">'+[["all","Todos"],["esp","Específicos"],["ap","Adm. Pública"],["port","Português"],["info","Informática"]].map(f=>'<button data-filter="'+f[0]+'" aria-pressed="'+(resFilter===f[0])+'">'+f[1]+'</button>').join("")+'</div>'+
+   '<label class="row small"><input type="checkbox" id="onlyMnem" '+(onlyMnem?'checked':'')+'> Só mnemônicos</label></div>'+
+   (onlyMnem?'<div class="grid g2">'+list.map(t=>'<div class="mnem" style="border-left:6px solid '+COR[t.m]+'"><div class="eyebrow" style="color:inherit;opacity:.75">'+esc(t.t)+'</div><b>'+esc(t.mn.sigla)+'</b>'+esc(t.mn.texto)+'</div>').join("")+'</div>':
+   list.map(t=>'<details class="topic" id="tp-'+t.id+'" style="--c:'+COR[t.m]+'" '+(openTp===t.id?'open':'')+'><summary>'+chip(t.m)+'<h3>'+esc(t.t)+'</h3><span class="small muted mono">'+fmtDate(dayOfTopic(t.id))+'</span>'+(S.lido[t.id]?'<span class="done-badge">✓ estudado</span>':'')+'</summary>'+
+     '<div class="body"><ul>'+t.resumo.map(r=>'<li>'+esc(r)+'</li>').join("")+'</ul>'+
+     '<div class="mnem"><b>'+esc(t.mn.sigla)+'</b>'+esc(t.mn.texto)+'</div>'+
+     '<div class="cloze"><div class="eyebrow">Complete as lacunas (toque para revelar)</div>'+t.lac.map(s=>'<p>'+esc(s).replace(/\[\[(.+?)\]\]/g,(m,w)=>'<button class="blank" aria-label="Revelar palavra">'+w+'</button>')+'</p>').join("")+'</div>'+
+     '<div class="row"><button class="btn '+(S.lido[t.id]?'':'primary')+'" data-lido="'+t.id+'">'+(S.lido[t.id]?'Desmarcar estudado':'Marcar como estudado')+'</button>'+
+     '<button class="btn" data-treino="'+t.id+'">Treinar questões deste tópico</button></div></div></details>').join(""))+
+   '</div>';
+  if(openTp){ const d=$("#tp-"+openTp); if(d) setTimeout(()=>d.scrollIntoView({block:"start",behavior:"smooth"}),50); openTp=null; }
+}
+
+// ---------- render: REDAÇÃO ----------
+let redTimer=null, redStart=null, redTema=0;
+function countLines(txt){ if(!txt.trim()) return 0; return txt.split("\n").reduce((a,l)=>a+Math.max(1,Math.ceil(l.length/72)),0); }
+function renderRedacao(){
+  const el=$("#tab-redacao"); const R=D.redacao; const draft=S.redDraft||"";
+  el.innerHTML='<div class="stack"><div><h2>Redação dissertativa</h2><p class="muted small" style="margin:4px 0 0">Vale 60 pontos e é eliminatória (mínimo 30). Treine à mão, em folha pautada, nos sábados do cronograma; use o editor abaixo para conferir tamanho e se autoavaliar.</p></div>'+
+  '<div class="grid g2"><div class="panel stack"><h3 style="font-size:1.1rem">Regras do edital (item 13)</h3><ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">'+R.regras.map(r=>'<li>'+esc(r)+'</li>').join("")+'</ul></div>'+
+  '<div class="panel stack"><h3 style="font-size:1.1rem">Critérios de correção (Tabela 13.2)</h3><div class="crit">'+R.criterios.map(c=>'<span>'+esc(c[0])+'</span><span class="pts">'+c[1]+'</span>').join("")+'<b>Total</b><span class="pts">60</span></div></div></div>'+
+  '<div class="panel stack"><h3 style="font-size:1.1rem">Estrutura que funciona em 20 a 30 linhas</h3><div class="grid g4">'+R.estrutura.map(e=>'<div><div class="eyebrow">'+esc(e[0])+'</div><p class="small" style="margin:4px 0 0">'+esc(e[1])+'</p></div>').join("")+'</div>'+
+  '<div class="tscroll"><table class="t"><tbody>'+R.conectores.map(c=>'<tr><td><b>'+esc(c[0])+'</b></td><td>'+esc(c[1])+'</td></tr>').join("")+'</tbody></table></div></div>'+
+  '<div class="panel stack"><div class="row" style="justify-content:space-between"><h3 style="font-size:1.1rem">Praticar</h3><div class="row"><span class="timer" id="redClock" style="font-size:1.2rem">50:00</span><button class="btn" id="redTime">'+(redTimer?'Parar':'Iniciar 50 min')+'</button></div></div>'+
+  '<label for="redTema" class="small">Tema</label><select id="redTema" class="btn">'+R.temas.map((t,i)=>'<option value="'+i+'" '+(i===redTema?'selected':'')+'>'+(i+1)+'. '+esc(t[0])+'</option>').join("")+'</select>'+
+  '<div class="note">'+esc(R.temas[redTema][1])+'</div>'+
+  '<textarea class="redac" id="redText" aria-label="Texto da redação" placeholder="Escreva aqui. Cada linha pautada equivale a uma linha da folha (estimativa de 72 caracteres por linha).">'+esc(draft)+'</textarea>'+
+  '<div class="row" style="justify-content:space-between"><span>Linhas estimadas: <span class="lines" id="redLines">0</span> <span class="small muted">(mínimo 20, máximo 30)</span></span><span class="small muted" id="redWords"></span></div>'+
+  '<div class="eyebrow">Autoavaliação</div><div class="grid g4">'+R.criterios.map((c,i)=>'<label class="small">'+esc(c[0].split(";")[0].split("(")[0])+' <b class="mono" id="sv'+i+'">10</b>/15<input type="range" min="0" max="15" value="10" id="sr'+i+'"></label>').join("")+'</div>'+
+  '<div class="row"><button class="btn primary" id="redSave">Salvar redação</button><span class="small muted">Nota estimada: <b class="mono" id="redNota">40</b>/60</span></div></div>'+
+  (S.redacoes.length?'<div class="panel"><h3 style="font-size:1.1rem">Redações salvas</h3><div class="tscroll"><table class="t"><thead><tr><th>Data</th><th>Tema</th><th class="n">Linhas</th><th class="n">Nota</th></tr></thead><tbody>'+S.redacoes.slice().reverse().map(r=>'<tr><td class="mono">'+fmtDate(r.date)+'</td><td>'+esc(D.redacao.temas[r.tema]?D.redacao.temas[r.tema][0]:"")+'</td><td class="n">'+r.linhas+'</td><td class="n">'+r.nota+'</td></tr>').join("")+'</tbody></table></div></div>':'')+
+  '</div>';
+  updRed();
+}
+function updRed(){
+  const ta=$("#redText"); if(!ta) return; const n=countLines(ta.value);
+  const l=$("#redLines"); l.textContent=n; l.className="lines "+(n>=20&&n<=30?"ok":(n?"bad":""));
+  $("#redWords").textContent=(ta.value.trim()?ta.value.trim().split(/\s+/).length:0)+" palavras";
+  let s=0; for(let i=0;i<4;i++){ const r=$("#sr"+i); if(r){ s+=+r.value; $("#sv"+i).textContent=r.value; } } $("#redNota").textContent=s;
+}
+
+// ---------- render: DESEMPENHO ----------
+function renderDesemp(){
+  const el=$("#tab-desempenho");
+  const acc={}; D.materias.forEach(m=>acc[m.id]={ok:0,n:0});
+  const tacc={};
+  Object.keys(S.qstats).forEach(id=>{const q=T.q[id]; if(!q) return; const st=S.qstats[id]; const m=matOf(q.tp); acc[m].ok+=st.ok; acc[m].n+=st.ok+st.err; tacc[q.tp]=tacc[q.tp]||{ok:0,n:0}; tacc[q.tp].ok+=st.ok; tacc[q.tp].n+=st.ok+st.err;});
+  const fracos=Object.keys(tacc).filter(k=>tacc[k].n>=2).map(k=>({k,p:tacc[k].ok/tacc[k].n,n:tacc[k].n})).sort((a,b)=>a.p-b.p).slice(0,6);
+  const dom=D.cards.filter(c=>S.cards[c.id]&&S.cards[c.id].box>=3).length;
+  const totalTasks=D.crono.reduce((a,d)=>a+dayTasks(d).length,0);
+  const doneTasks=D.crono.reduce((a,d)=>a+dayTasks(d).filter(x=>S.tasks[x.id]).length,0);
+  const lidos=Object.keys(S.lido).filter(k=>S.lido[k]).length;
+  const est=D.materias.reduce((a,m)=>a+(acc[m.id].n?acc[m.id].ok/acc[m.id].n*m.pts:0),0);
+  el.innerHTML='<div class="stack"><h2>Desempenho</h2>'+
+   '<div class="grid g4">'+
+    [["Dias para a prova",Math.max(0,diffDays(todayISO(),EXAM))],["Tarefas feitas",doneTasks+"/"+totalTasks],["Tópicos estudados",lidos+"/"+D.topicos.length],["Cartões dominados",dom+"/"+D.cards.length]].map(k=>'<div class="panel"><div class="eyebrow">'+k[0]+'</div><div class="res-big" style="font-size:2rem;margin-top:4px">'+k[1]+'</div></div>').join("")+
+   '</div>'+
+   '<div class="grid g2"><div class="panel"><h3 style="font-size:1.1rem">Acerto por área</h3><div class="weights" style="margin-top:10px">'+
+     D.materias.map(m=>{const a=acc[m.id]; const p=a.n?Math.round(a.ok/a.n*100):0; return '<div class="wrow" style="--c:'+COR[m.id]+'"><span>'+esc(m.nome)+'</span><span class="mono small">'+(a.n?p+'% · '+a.n+' resp.':'sem dados')+'</span><div class="bar"><span style="width:'+p+'%"></span></div></div>';}).join("")+
+     '</div><p class="small muted" style="margin:12px 0 0">Projeção pela taxa de acerto atual: <b class="mono">'+Math.round(est)+'</b> de 90 pontos na objetiva (mínimo 45).</p></div>'+
+   '<div class="panel"><h3 style="font-size:1.1rem">Tópicos que pedem revisão</h3>'+(fracos.length?'<table class="t" style="margin-top:8px"><tbody>'+fracos.map(f=>'<tr><td>'+chip(T.top[f.k].m)+' '+esc(T.top[f.k].t)+'</td><td class="n mono">'+Math.round(f.p*100)+'%</td><td><button class="btn ghost" data-go=\'{"tab":"resumos","tp":"'+f.k+'"}\'>Revisar</button></td></tr>').join("")+'</tbody></table>':'<p class="muted small">Responda algumas questões para ver seus pontos fracos aqui.</p>')+'</div></div>'+
+   '<div class="panel stack"><h3 style="font-size:1.1rem">Backup do progresso</h3><p class="small muted" style="margin:0">O progresso fica salvo automaticamente neste navegador. Para levar para outro aparelho ou guardar uma cópia, copie o código abaixo; para restaurar, cole um código e toque em Restaurar.</p>'+
+   '<textarea class="code" id="bkOut" readonly aria-label="Código de backup"></textarea><div class="row"><button class="btn" id="bkCopy">Copiar código</button></div>'+
+   '<textarea class="code" id="bkIn" aria-label="Colar código de backup" placeholder="Cole aqui um código de backup"></textarea><div class="row"><button class="btn" id="bkLoad">Restaurar</button><button class="btn" id="bkReset">Zerar progresso</button><span class="small" id="bkMsg"></span></div></div>'+
+   '</div>';
+  $("#bkOut").value=JSON.stringify(S);
+}
+
+// ---------- navegação ----------
+let curTab="hoje";
+function showTab(name){
+  curTab=name;
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===name));
+  document.querySelectorAll("main>section").forEach(s=>s.hidden = s.id!=="tab-"+name);
+  renderTab(name);
+  try{ localStorage.setItem(LS_KEY+"-tab", name); }catch(e){}
+}
+function renderTab(n){
+  ({hoje:renderHoje, cronograma:renderCrono, flashcards:renderFlash, simulados:renderSim, resumos:renderResumos, redacao:renderRedacao, desempenho:renderDesemp})[n]();
+}
+function renderAll(){ renderTab(curTab); updCount(); }
+function updCount(){ const n=diffDays(todayISO(),EXAM); $("#countdown").textContent = n>0 ? n+" dias para a prova" : (n===0?"Hoje é a prova":"Prova realizada"); }
+function go(g){
+  if(g.tab==="resumos"){ if(g.tp){ openTp=g.tp; resFilter="all"; onlyMnem=false; } if(g.mnem){ onlyMnem=true; } }
+  if(g.tab==="simulados"){
+    if(g.simDia){ const s=simOfDay(g.simDia); const tps=D.topicos.filter(t=>dayOfTopic(t.id)<=g.simDia).map(t=>t.id);
+      startSimCfg({nome:s.nome, qs:pickQuestions(s.n, s.full?D.topicos.map(t=>t.id):tps, {prop:true}), mode:"prova", limitMin:s.min, full:!!s.full, taskId:taskIdFor(g.simDia,/^Simulado/)}); }
+    else if(g.diag){ startSimCfg({nome:"Diagnóstico", qs:pickQuestions(10, D.topicos.map(t=>t.id), {prop:true}), mode:"treino", taskId:taskIdFor(START,/Diagnóstico/)}); }
+    else if(g.treinoDia){ const day=T.day[g.treinoDia]; startSimCfg({nome:"Treino do dia", qs:pickQuestions(10, day.tps), mode:"treino", taskId:"q:"+g.treinoDia}); }
+    else if(g.erros){ const e=shuffle(errosList()).slice(0,30); if(e.length) startSimCfg({nome:"Caderno de erros", qs:e, mode:"treino"}); }
+  }
+  showTab(g.tab); window.scrollTo(0,0);
+}
+function startSimCfg(cfg){ SIM=Object.assign({ans:{}, idx:0, start:Date.now(), done:false, revealed:{}}, cfg); }
+function taskIdFor(d, re){ const day=T.day[d]; if(!day) return null; const i=day.extra.findIndex(x=>re.test(x)); return i<0?null:"x"+i+":"+d; }
+
+// ---------- eventos ----------
+document.addEventListener("click", e=>{
+  const tab=e.target.closest("nav.tabs button"); if(tab){ showTab(tab.dataset.tab); return; }
+  const g=e.target.closest("[data-go]"); if(g){ e.preventDefault(); go(JSON.parse(g.dataset.go)); return; }
+  const id=e.target.id;
+  if(id==="prevDay"||id==="nextDay"){ const i=D.crono.findIndex(d=>d.d===viewDay)+(id==="prevDay"?-1:1); viewDay=D.crono[Math.max(0,Math.min(D.crono.length-1,i))].d; renderHoje(); return; }
+  if(id==="backToday"){ viewDay=curDay(); renderHoje(); return; }
+  const cell=e.target.closest("[data-day]"); if(cell){ viewDay=cell.dataset.day; showTab("hoje"); window.scrollTo(0,0); return; }
+  // flashcards
+  if(e.target.closest("#fcard")||id==="flipBtn"){ fflip=!fflip; renderFlash(); return; }
+  const rt=e.target.closest("[data-rate]"); if(rt){ const r=+rt.dataset.rate; rateCard(fcur,r); fq.shift(); if(r===0) fq.push(fcur); fdone++; fflip=false; renderFlash(); return; }
+  // simulados
+  const sd=e.target.closest("[data-sim]"); if(sd){ go({tab:"simulados",simDia:sd.dataset.sim}); return; }
+  if(e.target.closest("[data-diag]")){ go({tab:"simulados",diag:true}); return; }
+  if(id==="trGo"){ const m=$("#trMat").value, tp=$("#trTp").value, n=+$("#trN").value; let tps;
+    if(tp!=="all") tps=[tp]; else tps=(S.liberarTudo?D.topicos.map(t=>t.id):unlockedTopics()).filter(x=>m==="all"||matOf(x)===m);
+    if(!tps.length) tps=D.topicos.filter(t=>m==="all"||t.m===m).map(t=>t.id);
+    startSim({nome:"Treino rápido", qs:pickQuestions(n,tps), mode:"treino"}); return; }
+  if(id==="errGo"){ go({tab:"simulados",erros:true}); return; }
+  const al=e.target.closest("[data-alt]"); if(al&&SIM&&!SIM.done){ SIM.ans[SIM.qs[SIM.idx]]=+al.dataset.alt; renderSim(); return; }
+  if(id==="qCheck"){ const qid=SIM.qs[SIM.idx]; SIM.revealed[qid]=true; recordAnswer(qid, SIM.ans[qid]); touch(); renderSim(); return; }
+  if(id==="qPrev"){ SIM.idx--; renderSim(); return; }
+  if(id==="qNext"){ SIM.idx++; renderSim(); return; }
+  const jp=e.target.closest("[data-jump]"); if(jp){ SIM.idx=+jp.dataset.jump; renderSim(); return; }
+  if(id==="qEnd"||id==="qEnd2"){ if(SIM.mode==="treino"){ SIM.qs.forEach(q=>{ if(SIM.ans[q]!==undefined && !SIM.revealed[q]){ SIM.revealed[q]=true; recordAnswer(q,SIM.ans[q]); } }); } finishSim(); return; }
+  if(id==="qQuit"){ if(e.target.dataset.armed){ SIM=null; renderSim(); } else { e.target.dataset.armed="1"; e.target.textContent="Toque de novo para sair"; } return; }
+  if(id==="simBack"){ SIM=null; renderSim(); return; }
+  // resumos
+  const fl=e.target.closest("[data-filter]"); if(fl){ resFilter=fl.dataset.filter; renderResumos(); return; }
+  if(e.target.classList.contains("blank")){ e.target.classList.toggle("show"); return; }
+  const ld=e.target.closest("[data-lido]"); if(ld){ const t=ld.dataset.lido; S.lido[t]=!S.lido[t]; S.tasks["r:"+t]=S.lido[t]; openTp=null; touch(); const op=$("#tp-"+t); renderResumos(); const n=$("#tp-"+t); if(n&&op) n.open=true; toast(S.lido[t]?"Tópico marcado como estudado":"Marcação removida"); return; }
+  const tr=e.target.closest("[data-treino]"); if(tr){ startSimCfg({nome:"Treino: "+T.top[tr.dataset.treino].t, qs:pickQuestions(10,[tr.dataset.treino]), mode:"treino"}); showTab("simulados"); window.scrollTo(0,0); return; }
+  // redação
+  if(id==="redTime"){ if(redTimer){ clearInterval(redTimer); redTimer=null; e.target.textContent="Iniciar 50 min"; } else { redStart=Date.now(); e.target.textContent="Parar"; redTimer=setInterval(()=>{ const c=$("#redClock"); const left=Math.max(0,3000000-(Date.now()-redStart)); if(c) c.textContent=pad(Math.floor(left/60000))+":"+pad(Math.floor(left%60000/1000)); if(!left){ clearInterval(redTimer); redTimer=null; toast("50 minutos: hora de passar a limpo"); } },1000); } return; }
+  if(id==="redSave"){ const txt=$("#redText").value; if(!txt.trim()){ toast("Escreva o texto antes de salvar"); return; } let nota=0; for(let i=0;i<4;i++) nota+=+$("#sr"+i).value;
+    S.redacoes.push({date:todayISO(), tema:redTema, linhas:countLines(txt), nota, texto:txt.slice(0,4000)}); if(S.redacoes.length>12) S.redacoes.shift(); S.redDraft=""; touch(); renderRedacao(); toast("Redação salva"); return; }
+  // backup
+  if(id==="bkCopy"){ const ta=$("#bkOut"); navigator.clipboard.writeText(ta.value).then(()=>toast("Código copiado")).catch(()=>{ ta.select(); toast("Selecionado: copie com Ctrl+C"); }); return; }
+  if(id==="bkLoad"){ try{ const o=JSON.parse($("#bkIn").value); if(!o||typeof o!=="object"||!o.cards) throw 0; S=Object.assign(blankState(),o); S.updatedAt=Date.now(); touch(); renderDesemp(); toast("Progresso restaurado"); }catch(err){ $("#bkMsg").textContent="Código inválido: cole o texto completo copiado do backup."; } return; }
+  if(id==="bkReset"){ if(e.target.dataset.armed){ S=blankState(); S.updatedAt=Date.now(); touch(); fq=null; renderDesemp(); toast("Progresso zerado"); } else { e.target.dataset.armed="1"; e.target.textContent="Toque de novo para confirmar"; } return; }
+});
+document.addEventListener("change", e=>{
+  if(e.target.dataset.task){ S.tasks[e.target.dataset.task]=e.target.checked; const t=e.target.dataset.task; if(t.startsWith("r:")) S.lido[t.slice(2)]=e.target.checked; touch(); renderHoje(); return; }
+  if(e.target.id==="libAll"){ S.liberarTudo=e.target.checked; fq=null; touch(); renderFlash(); return; }
+  if(e.target.id==="onlyMnem"){ onlyMnem=e.target.checked; renderResumos(); return; }
+  if(e.target.id==="redTema"){ S.redDraft=$("#redText").value; redTema=+e.target.value; renderRedacao(); return; }
+  if(e.target.id==="trMat"){ const m=e.target.value; const sel=$("#trTp"); [...sel.options].forEach(o=>{ o.hidden = o.value!=="all" && m!=="all" && matOf(o.value)!==m; }); sel.value="all"; }
+});
+let draftT=null;
+document.addEventListener("input", e=>{
+  if(e.target.id==="redText"||/^sr\d$/.test(e.target.id)){ updRed(); if(e.target.id==="redText"){ clearTimeout(draftT); draftT=setTimeout(()=>{ S.redDraft=e.target.value; touch(); },2000); } }
+});
+document.addEventListener("keydown", e=>{
+  if(curTab!=="flashcards"||!fcur||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+  if(e.code==="Space"){ e.preventDefault(); fflip=!fflip; renderFlash(); }
+  if(fflip && ["1","2","3","4"].includes(e.key)){ const b=document.querySelector('[data-rate="'+(+e.key-1)+'"]'); if(b) b.click(); }
+});
+
+// ---------- início ----------
+async function init(){
+  try{
+    const r=await fetch("dados.json"); D=await r.json();
+  }catch(e){ $("#tab-hoje").innerHTML='<div class="panel empty">Não foi possível carregar o conteúdo. Recarregue a página.</div>'; return; }
+  T.top={}; D.topicos.forEach(t=>T.top[t.id]=t);
+  T.q={}; D.questoes.forEach(q=>T.q[q.id]=q);
+  T.day={}; T.topDay={}; D.crono.forEach(d=>{ T.day[d.d]=d; d.tps.forEach(tp=>T.topDay[tp]=d.d); });
+  S=Object.assign(blankState(), loadLocal()||{});
+  let tab="hoje"; try{ tab=localStorage.getItem(LS_KEY+"-tab")||"hoje"; }catch(e){}
+  if(!document.getElementById("tab-"+tab)) tab="hoje";
+  setSync("Salvo neste navegador");
+  showTab(tab); updCount();
+  connectRemote();
+}
+init();
+})();
+</script>
+
+</body>
+</html>
